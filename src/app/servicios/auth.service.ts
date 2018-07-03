@@ -21,9 +21,15 @@ export class AuthService {
     });
   }
 
-  /*getAuth() {
-    return this.afAuth.authState.toPromise(auth => auth);
-  }*/
+  getAuth() {
+    this.afAuth.authState.subscribe(res => {
+      if (res && res.uid) {
+        console.log('user is logged in');
+      } else {
+        console.log('user not logged in');
+      }
+    });
+  }
 
   logout() {
     return this.afAuth.auth.signOut();
