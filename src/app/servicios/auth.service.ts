@@ -1,13 +1,18 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from 'angularfire2/auth';
 import * as firebase from 'firebase/app';
+import { Observable } from 'rxjs/internal/Observable';
 
 @Injectable()
 export class AuthService {
 
-  private authState: any = null;
+  private authState = null;
 
-  constructor(public afAuth: AngularFireAuth) { }
+  constructor(public afAuth: AngularFireAuth) { 
+    this.getAuth().subscribe(auth => {
+        this.authState = auth;
+    });
+   }
 
   registerUser(email: string, pass: string) {
     return new Promise((resolve, reject) => {
@@ -23,31 +28,16 @@ export class AuthService {
     });
   }
 
-   // Returns true if user is logged in
-  get authenticated(): boolean {
-    return this.authState !== null;
-  }
-
-  // Returns current user data
-  get currentUser(): any {
-    return this.authenticated ? this.authState : null;
-  }
-
-
   getAuth() {
-    this.afAuth.authState
-    .subscribe(res => {
-      if (res && res.uid) {
-        return res;
-        //console.log(JSON.stringify(res)+' user is logged in');
-      } else {
-        //console.log(JSON.stringify(res)+ 'user not logged in');
-      }
-    });
+    return this.afAuth.authState;
   }
 
   logout() {
     return this.afAuth.auth.signOut();
+  }
+
+  get authenticated(): boolean {
+    return this.authState !== null;
   }
 
 }
