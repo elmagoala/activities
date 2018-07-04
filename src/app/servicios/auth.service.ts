@@ -5,6 +5,8 @@ import * as firebase from 'firebase/app';
 @Injectable()
 export class AuthService {
 
+  private authState: any = null;
+
   constructor(public afAuth: AngularFireAuth) { }
 
   registerUser(email: string, pass: string) {
@@ -21,12 +23,25 @@ export class AuthService {
     });
   }
 
+   // Returns true if user is logged in
+  get authenticated(): boolean {
+    return this.authState !== null;
+  }
+
+  // Returns current user data
+  get currentUser(): any {
+    return this.authenticated ? this.authState : null;
+  }
+
+
   getAuth() {
-    this.afAuth.authState.subscribe(res => {
+    this.afAuth.authState
+    .subscribe(res => {
       if (res && res.uid) {
-        console.log('user is logged in');
+        return res;
+        //console.log(JSON.stringify(res)+' user is logged in');
       } else {
-        console.log('user not logged in');
+        //console.log(JSON.stringify(res)+ 'user not logged in');
       }
     });
   }
