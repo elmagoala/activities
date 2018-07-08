@@ -16,12 +16,9 @@ interface User {
 export class AuthService {
 
   private authState = null;
-  authenticated2: boolean = false;
-  userLoggedIn = new Subject<boolean>();
-  user: Observable<User>;
-
+  
   constructor(public afAuth: AngularFireAuth) {
-    this.getAuth();  
+    
    }
 
   registerUser(email: string, pass: string) {
@@ -38,42 +35,11 @@ export class AuthService {
     });
   }
 
-  getAuth() {
-    console.log("currentUser: "+JSON.stringify(this.afAuth.auth.currentUser));
-  }
-
+  
   logout() {
+    localStorage.removeItem("userFire");
     return this.afAuth.auth.signOut();
+    
   }
-
-  /*get authenticated(): boolean {
-    this.getAuth().subscribe(auth => {
-      this.authState = auth;
-      if (this.authState) {
-        return true;
-      }
-
-  });
-  return false;
-}*/
-// Returns true if user is logged in
-get authenticated(): boolean {
-  console.log("service: "+JSON.stringify(this.getAuth()));
-  if (this.getAuth() !== null) {
-    return true;
-  }
-  return false;
-}
-
-get currentUserObservable(): any {
-  return this.afAuth.auth;
-}
-
-  checkAuthStatus() {
-    firebase.auth().onAuthStateChanged((user) => {
-        this.authenticated2 = !!user;
-        this.userLoggedIn.next(this.authenticated);
-    });
-}
 
 }
