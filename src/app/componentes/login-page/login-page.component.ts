@@ -33,4 +33,16 @@ export class LoginPageComponent implements OnInit {
     });
   }
 
+  googleLogin() {
+    this.authService.loginGoogle().then((res) => {
+      localStorage.setItem("userFire",JSON.stringify(res));
+      this.router.navigate(['/privado']);
+    }).catch((err) => {
+      this.flashMessage.show(err.message, {
+        cssClass:'alert-danger', timeout: 4000
+      });
+      this.router.navigate(['/login']);
+    });
+  }
+
 }
